@@ -17,6 +17,11 @@ if uploaded_file:
     # Load data
     df_raw = pd.read_csv(uploaded_file)
     
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    agent = LightweightDataCleaningAgent(model=llm, log=True)
+    agent.invoke_agent(data_raw=df_raw)
+    df_cleaned = agent.get_data_cleaned()
+
     # Clean button
     if st.button("Clean Data"):
         with st.spinner("Cleaning..."):
@@ -26,10 +31,16 @@ if uploaded_file:
             df_cleaned = agent.get_data_cleaned()
             
             st.success("Done!")
+
+            st.subheader("Raw Data")
+            st.dataframe(df_raw.head())
             
             st.subheader("Cleaned Data")
             st.write(f"Shape: {df_cleaned.shape[0]} rows × {df_cleaned.shape[1]} columns")
             st.dataframe(df_cleaned.head())
+
+            with st.expander("📊 Statistical Summary (df.describe())"):
+                st.dataframe(df_cleaned.describe())
             
             # Download
             csv = df_cleaned.to_csv(index=False)

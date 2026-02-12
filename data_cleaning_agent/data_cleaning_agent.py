@@ -207,6 +207,8 @@ def make_lightweight_data_cleaning_agent(
             1. Remove columns with more than 40% missing values
             2. Impute missing values (mean for numeric, mode for categorical)
             3. Remove duplicate rows
+            4. Remove_outliers using IQR method on the dataset
+            5. Rename columns in readable format
 
             User Instructions:
             {user_instructions}
